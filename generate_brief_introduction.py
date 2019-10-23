@@ -57,7 +57,17 @@ class BriefIntro:
         with open(outfile, "w") as g:
             print(tpl.render(cards=cards, title=title), file=g)
 
+    def get_vote(self, board_name, list_name, topk=5):
+        b = self.get_board_by_name(board_name)
+        l = self.get_list_by_name(b, list_name)
+        cards = l.list_cards()
+        votes = [(c, len(c.member_ids)) for c in cards]
+        votes.sort(key=lambda p: p[1], reverse=True)
+        for c, v in votes[:topk]:
+            print(v, c.name)
+
 
 if __name__ == "__main__":
     br = BriefIntro()
-    br.code_gen("VLDB2019", "待办", "VLDB2019简评", "/Users/zlv/Hack/trello/br.md")
+    br.get_vote("VLDB2019", "待办")
+    #br.code_gen("VLDB2019", "待办", "VLDB2019简评", "/Users/zlv/Hack/trello/br.md")
